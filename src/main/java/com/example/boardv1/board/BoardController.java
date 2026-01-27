@@ -19,7 +19,7 @@ public class BoardController {
 
     @GetMapping("/boards/save-form")
     public String saveForm() {
-        bService.insert();
+        bService.insert("", "");
         return "board/save-form";
     }
 
@@ -32,6 +32,12 @@ public class BoardController {
     public String detail(@PathVariable("id") int id) {
         bService.detail(id);
         return "board/detail";
+    }
+
+    @GetMapping("/boards/{id}/delete")
+    public String delete(@PathVariable("id") int id) {
+        bService.delete(id);
+        return "index";
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.boardv1.board;
 
 import java.util.List;
 
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -20,16 +21,29 @@ public class BoardRepository {
     }
 
     public List<Board> findAll() {
-        List<Board> findBoards = em.createQuery("select b from Board b", Board.class).getResultList(); // 객체지향쿼리
+        Query query = (Query) em.createQuery("select b from Board b", Board.class);
+        List<Board> findBoards = query.getResultList(); // 객체지향쿼리
         return findBoards;
     }
 
-    public void save(Board board) {
+    public void findAllV2() {
+        em.createQuery("select b.id, b.title from Board b").getResultList();
+    }
+
+    public Board save(Board board) {
         em.persist(board);
+        return board;
     }
 
     public void delete(Board board) {
         em.remove(board);
+    }
+
+    public void update(int id, String title, String content) {
+        Board board = findById(id);
+        board.setTitle(title);
+        board.setContent(content);
+        em.flush();
     }
 
 }

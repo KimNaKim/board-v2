@@ -11,16 +11,23 @@ public class BoardService {
 
     // 함수 정의
 
-    public void insert() {
-
+    public void insert(String title, String content) {
+        Board board = new Board();
+        board.setContent(content);
+        board.setTitle(title);
+        bRepository.save(board);
     }
 
     public void delete(int id) {
-
+        Board board = bRepository.findById(id);
+        bRepository.delete(board);
     }
 
     public void detail(int id) {
         bRepository.findById(id);
+    }
 
+    public void update(int id, String title, String content) {
+        bRepository.update(id, title, content);
     }
 }
