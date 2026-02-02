@@ -39,4 +39,19 @@ public class UserRepositoryTest {
         System.out.println(findUser);
     }
 
+    @Test
+    public void save_fail_test() {
+        // given
+        User user = new User();
+        user.setUsername("ssar");
+        user.setPassword("1234");
+        user.setEmail("ssar@gmail.com");
+
+        // when
+        User findUser = userRepository.save(user);
+
+        // eye (user 객체가 DB 데이터와 동기화되었음)
+        System.out.println(findUser);
+    }
+
 }

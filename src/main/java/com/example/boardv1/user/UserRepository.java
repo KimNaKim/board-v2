@@ -28,10 +28,11 @@ public class UserRepository {
         // 객체지향쿼리
         Query query = em.createQuery("select u from User u where u.username = :username", User.class);
         query.setParameter("username", username);
-        return (User) query.getSingleResult();
-    }
-
-    public void delete(User user) {
-        em.remove(user);
+        try {
+            User findUser = (User) query.getSingleResult();
+            return findUser;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

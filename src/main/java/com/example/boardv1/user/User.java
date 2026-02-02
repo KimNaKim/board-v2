@@ -22,10 +22,11 @@ public class User {
     @Id // primary 키 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto_INCREMENT 지정
     private Integer id;
-    @Column(unique = true) // 중복을 방지함 - pk, uk일 때 인덱스를 자동으로 만들어준다.
+    @Column(unique = true, nullable = false) // 중복을 방지함 - pk, uk일 때 인덱스를 자동으로 만들어준다.
     private String username;
     @Column(nullable = false, length = 100) // 입력값이 null일 수 없다.
     private String password;
+    @Column(nullable = false)
     private String email;
 
     @CreationTimestamp
