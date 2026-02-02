@@ -40,6 +40,8 @@ public class UserService {
     public User login(String username, String password) { // 로그인하기
         // 1. username으로 사용자 조회
         User user = uRepository.findByUsername(username);
+        if (user == null)
+            throw new RuntimeException("username을 찾을 수 없습니다.");
 
         // 2. 비밀번호 검증
         if (!user.getPassword().equals(password)) {

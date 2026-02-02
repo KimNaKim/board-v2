@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -20,8 +22,21 @@ public class UserController {
 
     // 로그인 버튼을 누를때 작동
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO reqDto) {
-        uService.login(reqDto.getUsername(), reqDto.getPassword());
+    public String login(UserRequest.LoginDTO reqDto, HttpServletRequest req) {
+        User sessionUser = uService.login(reqDto.getUsername(), reqDto.getPassword());
+        HttpSession session = req.getSession();
+        session.setAttribute("sessionUser", sessionUser);
+        return "redirect:/";
+    }
+
+    // 로그아웃 버튼을 누를 때 작동
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
         return "redirect:/";
     }
 
