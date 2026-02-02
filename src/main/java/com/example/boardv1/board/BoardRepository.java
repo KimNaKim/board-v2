@@ -16,6 +16,10 @@ public class BoardRepository {
 
     // Repository
     public Board findById(int id) {
+        // select * from board_tb where id = 1;
+        // ResultSet rs -> Board 객체 옮기기 (Object Mapping)
+        // Board board = new Board();
+        // board.id = rs.getInt("id");
         Board findBoard = em.find(Board.class, id);
         return findBoard;
     }
