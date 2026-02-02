@@ -1,12 +1,12 @@
 package com.example.boardv1.board;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +32,9 @@ public class BoardController {
 
     // 게시글 작성 버튼 누르면 실행됨
     @PostMapping("/boards/save")
-    public String save(HttpServletRequest req) {
-        String title = req.getParameter("title");
-        String content = req.getParameter("content");
+    public String save(BoardRequest.SaveOrUpdateDTO reqDTO) throws IOException {
+        String title = reqDTO.getTitle();
+        String content = reqDTO.getContent();
         // 작성한 게시글 상세 페이지로 이동하기(확인목적)
         int id = bService.insert(title, content).getId();
         return "redirect:/boards/" + id;
@@ -50,9 +50,8 @@ public class BoardController {
 
     // 게시글 수정 버튼 누르면 실행됨
     @PostMapping("/boards/{id}/update")
-    public String update(@PathVariable("id") int id, @RequestParam("title") String title,
-            @RequestParam("content") String content) {
-        bService.update(id, title, content);
+    public String update(@PathVariable("id") int id, BoardRequest.SaveOrUpdateDTO reqDTO) {
+        bService.update(id, reqDTO.getTitle(), reqDTO.getContent());
         return "redirect:/boards/" + id;
     }
 
