@@ -1,5 +1,7 @@
 package com.example.boardv1.user;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -28,6 +30,7 @@ public class UserRepository {
         // 객체지향쿼리
         Query query = em.createQuery("select u from User u where u.username = :username", User.class);
         query.setParameter("username", username);
+        System.out.println(query.getParameter("username"));
         try {
             User findUser = (User) query.getSingleResult();
             return findUser;
@@ -35,4 +38,11 @@ public class UserRepository {
             return null;
         }
     }
+
+    public List<User> findAll() {
+        Query query = (Query) em.createQuery("select u from User u order by u.id", User.class);
+        List<User> findUsers = query.getResultList(); // 객체지향쿼리
+        return findUsers;
+    }
+
 }

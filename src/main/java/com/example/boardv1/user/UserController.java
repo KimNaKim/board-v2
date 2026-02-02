@@ -35,6 +35,7 @@ public class UserController {
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO reqDto) {
         uService.insert(reqDto.getUsername(), reqDto.getPassword(), reqDto.getEmail());
+        // uService.findAll();
         return "redirect:/login-form";
     }
 }

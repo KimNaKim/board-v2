@@ -1,5 +1,7 @@
 package com.example.boardv1.user;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,5 +48,12 @@ public class UserService {
 
         // 3. 로그인 성공
         return user;
+    }
+
+    public void findAll() {
+        List<User> list = uRepository.findAll();
+        for (User user : list) {
+            System.out.println(user);
+        }
     }
 }
