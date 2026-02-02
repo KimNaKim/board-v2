@@ -21,6 +21,6 @@
 ## 4. Task
 - 그림 다운로드 (완)
 - user 폴더 UserController 만들어서 그림 연결   (완)
-- User 테이블 생성 - 더미데이터 
+- User 테이블 생성 - 더미데이터 (완)
 - UserRepository 만들어 DB 테스트하기
 - 컨트롤러, 서비스, Repository 연결해서 기능 완료하기
