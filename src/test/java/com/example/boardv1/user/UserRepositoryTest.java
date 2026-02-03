@@ -54,4 +54,17 @@ public class UserRepositoryTest {
         System.out.println(findUser);
     }
 
+    @Test
+    public void findByUsername_test() {
+        // given
+        String username = "ssar";
+
+        // when
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("해당 유저는 존재하지 않습니다."));
+
+        // eye
+        System.out.println("user : " + user);
+    }
+
 }

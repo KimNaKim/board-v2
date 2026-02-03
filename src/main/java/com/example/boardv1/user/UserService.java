@@ -15,9 +15,10 @@ public class UserService {
     @Transactional
     public User insert(String username, String password, String email) { // 회원가입
         // id(username 중복 체크)
-        User findUser = uRepository.findByUsername(username);
+        User findUser = uRepository.findByUsername(username).get();
+
         if (findUser != null) {
-            throw new RuntimeException("username이 중복되었습니다.");
+            throw new RuntimeException("입력하신 username이 중복되었습니다.");
         }
 
         // 2. 비영속 객체
@@ -39,17 +40,15 @@ public class UserService {
 
     public User login(String username, String password) { // 로그인하기
         // 1. username으로 사용자 조회
-        User user = uRepository.findByUsername(username);
-        if (user == null)
-            throw new RuntimeException("username을 찾을 수 없습니다.");
-
+        User user = uRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("username을 찾을 수 없습니다."));
         // 2. 비밀번호 검증
         if (!user.getPassword().equals(password)) {
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
 
         // 3. 로그인 성공
-        return user;
+        return null;
     }
 
     public void findAll() {

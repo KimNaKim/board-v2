@@ -1,6 +1,7 @@
 package com.example.boardv1.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -26,22 +27,17 @@ public class UserRepository {
     }
 
     // 로그인 시 username으로 조회하여 password 검증하기
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         // 객체지향쿼리
-        Query query = em.createQuery("select u from User u where u.username = :username", User.class);
-        query.setParameter("username", username);
-        System.out.println(query.getParameter("username"));
-        try {
-            User findUser = (User) query.getSingleResult();
-            return findUser;
-        } catch (Exception e) {
-            return null;
-        }
+        return em.createQuery("select u from User u where u.username = :username", User.class)
+                .setParameter("username", username)
+                .getResultStream()
+                .findFirst();
     }
 
     public List<User> findAll() {
         Query query = (Query) em.createQuery("select u from User u order by u.id", User.class);
-        List<User> findUsers = query.getResultList(); // 객체지향쿼리
+        List<User> findUsers = query.getResultStream().toList(); // 객체지향쿼리
         return findUsers;
     }
 
