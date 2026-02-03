@@ -1,7 +1,6 @@
 {{> header}}
 
 <div class="container p-5">
-    {{#model}}
     <!-- 수정삭제버튼 -->
     <div class="d-flex justify-content-end">
         <a class="btn btn-secondary me-1" href = "/boards/{{id}}/update-form">수정</a>
@@ -13,16 +12,15 @@
     <!-- 게시글내용 -->
     
     <div> 
-        <h2><b>{{title}}</b></h2>
+        <h2><b>{{model.title}}</b></h2>
         <hr />
         <div class="d-flex justify-content-end">
-            작성자 : 익명
+            작성자 : {{model.user.username}}
         </div>
         <div class="m-4 p-2">
-            {{content}}
+            {{model.content}}
         </div>
     </div>
-    {{/model}}
 
     <!-- 댓글 -->
     <div class="card mt-3">

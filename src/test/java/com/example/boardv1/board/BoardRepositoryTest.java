@@ -25,23 +25,11 @@ public class BoardRepositoryTest {
         int id = 1;
 
         // when
-        Board board = boardRepository.findById(id);
+        Board board = boardRepository.findById(id).get();
+        System.out.println(board.getUser().getId());
 
         // eye
-        System.out.println(board);
-    }
-
-    @Test
-    public void findByIdV2_test() {
-        // given
-        int id = 1;
-
-        // when
-        Board board = boardRepository.findById(id);
-        em.clear();
-        boardRepository.findById(id);
-
-        // eye
+        // user 전체 정보가 필요할 때 select 연산을 별도로 수행함
         System.out.println(board);
     }
 
@@ -77,7 +65,7 @@ public class BoardRepositoryTest {
     public void delete_test() {
         // given
         int id = 6;
-        Board board = boardRepository.findById(id);
+        Board board = boardRepository.findById(id).get();
 
         // when
         boardRepository.delete(board);
@@ -89,7 +77,7 @@ public class BoardRepositoryTest {
     @Test
     public void update_test() {
         // given
-        Board board = boardRepository.findById(1);
+        Board board = boardRepository.findById(1).get();
 
         // when
         board.setTitle("title1-update");
@@ -104,4 +92,15 @@ public class BoardRepositoryTest {
         }
     }
 
+    @Test
+    public void findByIdJoinUser_test() {
+        // given
+        int i = 2;
+
+        // when
+        Board board = boardRepository.findByIdJoinUser(i).get();
+
+        // eye
+        System.out.println(board);
+    }
 }

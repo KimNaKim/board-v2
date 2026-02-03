@@ -26,17 +26,20 @@ public class UserRepository {
         return findUser;
     }
 
-    // 로그인 시 username으로 조회하여 password 검증하기
+    // 로그인할때 username으로 조회해서 password 검증
     public Optional<User> findByUsername(String username) {
-        // 객체지향쿼리
-        return em.createQuery("select u from User u where u.username = :username", User.class)
-                .setParameter("username", username)
-                .getResultStream()
-                .findFirst();
+        try {
+            User user = em.createQuery("select u from User u where u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            return Optional.of(user);
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
     }
 
     public List<User> findAll() {
-        Query query = (Query) em.createQuery("select u from User u order by u.id", User.class);
+        Query query = em.createQuery("select u from User u order by u.id", User.class);
         List<User> findUsers = query.getResultStream().toList(); // 객체지향쿼리
         return findUsers;
     }

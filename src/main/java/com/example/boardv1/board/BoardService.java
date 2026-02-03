@@ -26,19 +26,20 @@ public class BoardService {
 
     @Transactional
     public void delete(int id) {
-        Board board = bRepository.findById(id);
+        Board board = bRepository.findById(id).get();
         bRepository.delete(board);
     }
 
     @Transactional
     public void update(int id, String title, String content) {
-        Board board = bRepository.findById(id);
+        Board board = bRepository.findById(id).get();
         board.setTitle(title);
         board.setContent(content);
     }
 
     public Board detail(int id) {
-        Board board = bRepository.findById(id);
+        Board board = bRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
         return board;
     }

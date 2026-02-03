@@ -48,7 +48,7 @@ public class UserService {
         }
 
         // 3. 로그인 성공
-        return null;
+        return user;
     }
 
     public void findAll() {
