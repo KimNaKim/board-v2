@@ -2,20 +2,21 @@
 
 <div class="container p-5">
     <!-- 수정삭제버튼 -->
+    {{#model.isOwner}}
     <div class="d-flex justify-content-end">
         <a class="btn btn-secondary me-1" href = "/boards/{{id}}/update-form">수정</a>
         <form action="/boards/{{id}}/delete" method="post" enctype="application/x-www-form-urlencoded">
             <button class="btn btn-outline-secondary" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
         </form>
     </div>
-
+    {{/model.isOwner}}
     <!-- 게시글내용 -->
     
     <div> 
         <h2><b>{{model.title}}</b></h2>
         <hr />
         <div class="d-flex justify-content-end">
-            작성자 : {{model.user.username}}
+            작성자 : {{model.username}}
         </div>
         <div class="m-4 p-2">
             {{model.content}}

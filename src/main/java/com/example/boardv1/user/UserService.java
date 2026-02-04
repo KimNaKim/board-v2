@@ -15,11 +15,10 @@ public class UserService {
     @Transactional
     public User insert(String username, String password, String email) { // 회원가입
         // id(username 중복 체크)
-        User findUser = uRepository.findByUsername(username).get();
-
-        if (findUser != null) {
-            throw new RuntimeException("입력하신 username이 중복되었습니다.");
-        }
+        uRepository.findByUsername(username)
+                .ifPresent(u -> {
+                    throw new RuntimeException("입력하신 username이 중복되었습니다.");
+                });
 
         // 2. 비영속 객체
         User user = new User();

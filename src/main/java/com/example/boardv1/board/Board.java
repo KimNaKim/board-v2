@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.example.boardv1.user.User;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,7 +31,7 @@ public class Board { // user 1, board n
     private String content;
 
     // private Integer userId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @CreationTimestamp
