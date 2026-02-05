@@ -28,6 +28,7 @@
         <!-- 댓글등록 -->
         <div class="card-body">
             <form action="/replies/save" method="post">
+                <input type="hidden" name="boardId" value="{{id}}">
                 <textarea class="form-control" rows="2" name="comment"></textarea>
                 <div class="d-flex justify-content-end">
                 <button class="btn btn-secondary mt-1">                        
@@ -59,6 +60,27 @@
         </div>
     </div>
 </div>
+<script>
+    // 1. textarea 가져오기
+    const textarea = document.querySelector("textarea");
+    // 댓글 등록 버튼
+    const submitBtn = document.querySelector("form[action='/replies/save'] button");
 
+    // 서버에서 내려준 로그인 여부 (없으면 false)
+    const isLogin = {{#sessionUser}}true{{/sessionUser}}{{^sessionUser}}false{{/sessionUser}};
+
+    // 2. textarea 클릭 이벤트
+    textarea.addEventListener("click", function () {
+        if (!isLogin) {
+            alert("로그인하세요");
+            
+            // textarea 비활성화
+            textarea.disabled = true;
+
+            // 버튼 비활성화
+            submitBtn.disabled = true;
+        }
+    });
+</script>
 </body>
 </html>
