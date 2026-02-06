@@ -21,6 +21,7 @@ public class BoardService {
     public Board insert(String title, String content, User sessionUser) {
         // 1. 비영속 객체 (before persist)
         Board board = new Board();
+
         board.setContent(content);
         board.setTitle(title);
         board.setUser(sessionUser);
@@ -62,6 +63,14 @@ public class BoardService {
     // 게시글 전체조회
     public List<Board> findAll() {
         List<Board> list = bRepository.findAll();
+        for (Board board : list) {
+
+            String content = board.getContent();
+
+            if (content.contains("<iframe")) {
+                board.setContent("동영상");
+            }
+        }
         return list;
     }
 

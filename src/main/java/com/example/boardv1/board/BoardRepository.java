@@ -56,4 +56,9 @@ public class BoardRepository {
         }
     }
 
+    public Board getReferenceById(Integer boardId) {
+        Board board = em.getReference(Board.class, boardId);
+        return board;
+    }
+
 }

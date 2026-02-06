@@ -24,16 +24,7 @@ public class ReplyRepository {
     }
 
     public Optional<Reply> findById(int id) {
-        try {
-            Reply reply = em.find(Reply.class, id);
-            return Optional.of(reply);
-        } catch (Exception e) {
-            return Optional.ofNullable(null);
-        }
+        return Optional.ofNullable(em.find(Reply.class, id));
     }
 
-    public Board getReferenceById(Integer boardId) {
-        Board board = em.getReference(Board.class, boardId);
-        return board;
-    }
 }

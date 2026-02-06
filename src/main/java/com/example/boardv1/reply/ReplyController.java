@@ -20,15 +20,13 @@ public class ReplyController {
     @PostMapping("/replies/save")
     public String save(ReplyRequest.SaveOrUpdateDTO reqDTO) throws IOException {
         // 인증o 권한x
-        String comment = reqDTO.getComment();
-        int boardId = reqDTO.getBoardId();
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
             throw new RuntimeException("인증되지 않은 사용자입니다.");
         }
         // 작성후 댓글 확인을 위해 리다이렉트
-        int id = replyService.insert(comment, boardId, sessionUser).getBoard().getId();
+        int id = replyService.insert(reqDTO, sessionUser).getBoard().getId();
         return "redirect:/boards/" + id;
     }
 
@@ -42,8 +40,11 @@ public class ReplyController {
         if (sessionUser == null) {
             throw new RuntimeException("인증되지 않은 사용자입니다.");
         }
-        
-        int boardId = replyService.delete(id, sessionUser.getId());
+        Reply reply = replyService.findById(id);
+        int boardId = reply.getBoard().getId();
+
+        replyService.delete(id, sessionUser.getId());
+        // 삭제후 댓글 확인을 위해 리다이렉트
         return "redirect:/boards/" + boardId;
     }
 }

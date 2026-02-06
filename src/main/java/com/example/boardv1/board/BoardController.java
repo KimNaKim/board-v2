@@ -48,6 +48,7 @@ public class BoardController {
         // 인증o 권한x
         String title = reqDTO.getTitle();
         String content = reqDTO.getContent();
+
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {

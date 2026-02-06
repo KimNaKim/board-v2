@@ -5,18 +5,68 @@
     <div class="card">
         <div class="card-header"><b>게시글 작성</b></div>
         <div class="card-body">
-            <form action="/boards/save" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="/boards/save" method="post" enctype="application/x-www-form-urlencoded" onsubmit="syncContent()">
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="Enter title" name="title">
                 </div>
                 <div class="mb-3">
-                    <textarea class="form-control" rows="5" name="content"></textarea>
+                    <textarea class="form-control" rows="5" name="content" id = "summernote"></textarea>
                 </div>
                 <button class="btn btn-secondary form-control">글쓰기</button>
             </form>
         </div>
     </div>
 </div>
+<script>
+    //summernote 초기화화
+    $('#summernote').summernote({
+        height: 300,
+        //ctrl+v(붙여넣기) 입력 발생할 경우 실행할 함수
+        callbacks: {
+            onPaste: function(e) {
+                let clipboard = (e.originalEvent || e).clipboardData;
+                let text = clipboard.getData('text');
+                //해당 붙여넣기 내용이 유튜브 링크인지 확인하는 과정
+                if (isYoutubeUrl(text)) {
+                    e.preventDefault();
+                    insertYoutube(text);
+                }
+            }
+        }
+    });
 
+    function syncContent() {
+        let html = $('#summernote').summernote('code');
+        $('#summernote').val(html);
+    }
+    //유튜브 링크인지 확인
+    function isYoutubeUrl(url) {
+        return url.includes("youtube.com") || url.includes("youtu.be");
+    }
+    //유튜브 링크일 경우 html 내부에 들어갈 코드 (iframe 태그 삽입하기)
+    function insertYoutube(url) {
+
+        let videoId = extractYoutubeId(url);
+
+        let iframe = `
+            <iframe width="560" height="315"
+            src="https://www.youtube.com/embed/${videoId}"
+            frameborder="0"
+            allowfullscreen></iframe>
+        `;
+
+        $('#summernote').summernote('pasteHTML', iframe);
+    }
+    //유튜브 링크에서 영상 ID만 뽑아내는 함수
+    function extractYoutubeId(url) {
+
+        let regExp =
+            /(?:youtube\.com.*(?:\\?|&)v=|youtu\.be\/)([^&]+)/;
+
+        let match = url.match(regExp);
+
+        return match ? match[1] : null;
+    }
+</script>
 </body>
 </html>
