@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.example.boardv1.board.Board;
-
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+import com.example.boardv1._core.errors.ex.Exception401;
 import com.example.boardv1.user.User;
 
 @Controller
@@ -23,7 +24,7 @@ public class ReplyController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         // 작성후 댓글 확인을 위해 리다이렉트
         int id = replyService.insert(reqDTO, sessionUser).getBoard().getId();
@@ -38,7 +39,7 @@ public class ReplyController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         Reply reply = replyService.findById(id);
         int boardId = reply.getBoard().getId();

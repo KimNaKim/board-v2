@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.boardv1._core.errors.ex.Exception401;
 import com.example.boardv1.user.User;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         return "board/save-form";
     }
@@ -52,7 +53,7 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         // 작성한 게시글 상세 페이지로 이동하기(확인목적)
         int id = bService.insert(title, content, sessionUser).getId();
@@ -66,7 +67,7 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         Board board = bService.updateFormBoardInfo(id, sessionUser.getId());
         req.setAttribute("model", board);
@@ -80,7 +81,7 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         bService.update(id, reqDTO.getTitle(), reqDTO.getContent(), sessionUser.getId());
         return "redirect:/boards/" + id;
@@ -107,7 +108,7 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
-            throw new RuntimeException("인증되지 않은 사용자입니다.");
+            throw new Exception401("인증되지 않은 사용자입니다.");
         }
         bService.delete(id, sessionUser.getId());
         return "redirect:/";

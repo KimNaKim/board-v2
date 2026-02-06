@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.boardv1._core.errors.ex.Exception400;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,7 +19,7 @@ public class UserService {
         // id(username 중복 체크)
         uRepository.findByUsername(username)
                 .ifPresent(u -> {
-                    throw new RuntimeException("입력하신 username이 중복되었습니다.");
+                    throw new Exception400("입력하신 username이 중복되었습니다.");
                 });
 
         // 2. 비영속 객체
@@ -40,10 +42,10 @@ public class UserService {
     public User login(String username, String password) { // 로그인하기
         // 1. username으로 사용자 조회
         User user = uRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("username을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception400("username을 찾을 수 없습니다."));
         // 2. 비밀번호 검증
         if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("비밀번호가 틀렸습니다.");
+            throw new Exception400("비밀번호가 틀렸습니다.");
         }
 
         // 3. 로그인 성공

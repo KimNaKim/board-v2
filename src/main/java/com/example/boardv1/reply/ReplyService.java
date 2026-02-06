@@ -3,6 +3,8 @@ package com.example.boardv1.reply;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.boardv1._core.errors.ex.Exception400;
+import com.example.boardv1._core.errors.ex.Exception403;
 import com.example.boardv1.board.Board;
 import com.example.boardv1.board.BoardRepository;
 import com.example.boardv1.user.User;
@@ -31,15 +33,15 @@ public class ReplyService {
     @Transactional
     public void delete(int id, int sessionUserId) {
         Reply reply = replyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception400("댓글을 찾을 수 없습니다."));
         // 권한 체크
         if (sessionUserId != reply.getUser().getId())
-            throw new RuntimeException("삭제 권한이 없습니다.");
+            throw new Exception403("삭제 권한이 없습니다.");
         replyRepository.delete(reply);
     }
 
     public Reply findById(int id) {
-        return replyRepository.findById(id).orElseThrow(() -> new RuntimeException("댓글을 찾지 못했습니다."));
+        return replyRepository.findById(id).orElseThrow(() -> new Exception400("댓글을 찾지 못했습니다."));
     }
 
 }

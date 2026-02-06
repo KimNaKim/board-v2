@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.boardv1._core.errors.ex.Exception400;
+import com.example.boardv1._core.errors.ex.Exception401;
+import com.example.boardv1._core.errors.ex.Exception403;
 import com.example.boardv1.user.User;
 
 import lombok.RequiredArgsConstructor;
@@ -34,10 +37,10 @@ public class BoardService {
     @Transactional
     public void delete(int id, int sessionUserId) {
         Board board = bRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception400("게시글을 찾을 수 없습니다."));
         // 권한 체크
         if (sessionUserId != board.getUser().getId())
-            throw new RuntimeException("삭제 권한이 없습니다.");
+            throw new Exception403("삭제 권한이 없습니다.");
         bRepository.delete(board);
     }
 
@@ -45,10 +48,10 @@ public class BoardService {
     @Transactional
     public void update(int id, String title, String content, int sessionUserId) {
         Board board = bRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception400("게시글을 찾을 수 없습니다."));
         // 권한 체크
         if (sessionUserId != board.getUser().getId())
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw new Exception403("수정 권한이 없습니다.");
         board.setTitle(title);
         board.setContent(content);
     }
@@ -56,7 +59,7 @@ public class BoardService {
     // 게시글상세보기
     public BoardResponse.DetailDTO detail(int id, Integer sessionUserId) {
         Board board = bRepository.findByIdJoinUser(id)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception400("게시글을 찾을 수 없습니다."));
         return new BoardResponse.DetailDTO(board, sessionUserId);
     }
 
@@ -77,11 +80,11 @@ public class BoardService {
     // 수정 폼 게시글의 정보 가져오기
     public Board updateFormBoardInfo(int id, int sessionUserId) {
         Board board = bRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception400("게시글을 찾을 수 없습니다."));
 
         // 권한 체크
         if (sessionUserId != board.getUser().getId())
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw new Exception403("수정 권한이 없습니다.");
         return board;
     }
 }
