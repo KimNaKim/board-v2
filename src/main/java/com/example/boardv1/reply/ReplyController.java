@@ -1,7 +1,5 @@
 package com.example.boardv1.reply;
 
-import java.io.IOException;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.example.boardv1._core.errors.ex.Exception401;
 import com.example.boardv1.user.User;
 
 @Controller
@@ -26,9 +23,6 @@ public class ReplyController {
         // 인증o 권한x
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
         // 작성후 댓글 확인을 위해 리다이렉트
         int id = replyService.insert(reqDTO, sessionUser).getBoard().getId();
         return "redirect:/boards/" + id;
@@ -41,9 +35,6 @@ public class ReplyController {
         // 인증o 권한o
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
         Reply reply = replyService.findById(id);
         int boardId = reply.getBoard().getId();
 

@@ -40,12 +40,6 @@ public class BoardController {
     // 게시글 작성 페이지
     @GetMapping("/boards/save-form")
     public String saveForm() {
-        // 인증o 권한x
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
         return "board/save-form";
     }
 
@@ -55,10 +49,6 @@ public class BoardController {
         // aop 클래스가 존재하기 때문에 자동으로 유효성 검사를 해준다.
         // 인증o 권한x
         User sessionUser = (User) session.getAttribute("sessionUser");
-        // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
 
         // 입력값 가져오기
         String title = reqDTO.getTitle();
@@ -88,9 +78,6 @@ public class BoardController {
         // 인증o 권한o
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
         Board board = bService.updateFormBoardInfo(id, sessionUser.getId());
         req.setAttribute("model", board);
         return "board/update-form";
@@ -103,9 +90,6 @@ public class BoardController {
         // 인증o 권한o
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
         bService.update(id, reqDTO.getTitle(), reqDTO.getContent(), sessionUser.getId());
         return "redirect:/boards/" + id;
     }
@@ -130,9 +114,6 @@ public class BoardController {
         // 인증o 권한o
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
-        if (sessionUser == null) {
-            throw new Exception401("인증되지 않은 사용자입니다.");
-        }
         try {
             bService.delete(id, sessionUser.getId());
         } catch (Exception e) {

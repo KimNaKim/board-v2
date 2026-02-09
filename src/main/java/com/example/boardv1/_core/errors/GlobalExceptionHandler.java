@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
         String html = String.format("""
                 <script>
                     alert('%s');
-                    location.href = '/login-form';
+                    history.back();
                 </script>
                 """, e.getMessage());
         // 로그 남기기
