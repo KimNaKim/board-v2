@@ -3,6 +3,8 @@ package com.example.boardv1.board;
 import java.io.IOException;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,21 +51,32 @@ public class BoardController {
 
     // 게시글 작성 버튼 누르면 실행됨
     @PostMapping("/boards/save")
-    public String save(@Valid BoardRequest.SaveOrUpdateDTO reqDTO, Errors errors) {
-        // 유효성 검사 실패 시
-        if (errors.hasErrors()) {
-            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
-        }
-
+    public String save(@Valid BoardRequest.SaveOrUpdateDTO reqDTO, Errors errors) throws IOException {
+        // aop 클래스가 존재하기 때문에 자동으로 유효성 검사를 해준다.
         // 인증o 권한x
-        String title = reqDTO.getTitle();
-        String content = reqDTO.getContent();
-
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
         if (sessionUser == null) {
             throw new Exception401("인증되지 않은 사용자입니다.");
         }
+
+        // 입력값 가져오기
+        String title = reqDTO.getTitle();
+        String content = reqDTO.getContent();
+
+        // HTML 태그 제거
+        Document doc = Jsoup.parse(content);
+        String plainContent = Jsoup.parse(content).text();
+
+        // 의미 있는 콘텐츠 태그들 유무 파악
+        boolean hasIframe = !doc.select("iframe").isEmpty();
+        boolean hasImage = !doc.select("img").isEmpty();
+
+        // 내부 내용 검증
+        if (plainContent.isEmpty() && !hasIframe && !hasImage) {
+            throw new Exception400("내용을 입력해주세요.");
+        }
+
         // 작성한 게시글 상세 페이지로 이동하기(확인목적)
         int id = bService.insert(title, content, sessionUser).getId();
         return "redirect:/boards/" + id;
@@ -86,10 +99,7 @@ public class BoardController {
     // 게시글 수정 버튼 누르면 실행됨
     @PostMapping("/boards/{id}/update")
     public String update(@PathVariable("id") int id, @Valid BoardRequest.SaveOrUpdateDTO reqDTO, Errors errors) {
-        // 유효성 검사 실패 시
-        if (errors.hasErrors()) {
-            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
-        }
+        // aop 클래스가 존재하기 때문에 자동으로 유효성 검사를 해준다.
         // 인증o 권한o
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)

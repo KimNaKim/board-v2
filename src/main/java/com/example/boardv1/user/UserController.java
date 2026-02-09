@@ -29,13 +29,10 @@ public class UserController {
     // 로그인 버튼을 누를때 작동
     @PostMapping("/login")
     public String login(@Valid UserRequest.LoginDTO reqDto, HttpServletResponse resp, Errors errors) {
+        // aop 클래스가 존재하기 때문에 자동으로 유효성 검사를 해준다.
+
         User sessionUser = uService.login(reqDto.getUsername(), reqDto.getPassword());
         session.setAttribute("sessionUser", sessionUser);
-
-        // 유효성 검사 실패 시
-        if (errors.hasErrors()) {
-            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
-        }
 
         // http Response header에 Set-Cookie : sessionKey 저장돼서 응답
         Cookie cookie = new Cookie("username", sessionUser.getUsername());
@@ -64,11 +61,7 @@ public class UserController {
     // 회원가입 버튼을 누를 때 작동
     @PostMapping("/join")
     public String join(@Valid UserRequest.JoinDTO reqDto, Errors errors) {
-        // 유효성 검사 실패 시
-        if (errors.hasErrors()) {
-            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
-        }
-
+        // aop 클래스가 존재하기 때문에 자동으로 유효성 검사를 해준다.
         uService.insert(reqDto.getUsername(), reqDto.getPassword(), reqDto.getEmail());
         // uService.findAll();
         return "redirect:/login-form";
