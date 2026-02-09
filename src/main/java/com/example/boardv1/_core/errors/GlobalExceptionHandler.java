@@ -1,7 +1,6 @@
 package com.example.boardv1._core.errors;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.boardv1._core.errors.ex.*;
@@ -23,7 +22,7 @@ public class GlobalExceptionHandler {
 
     // 미인증 유저
     @ExceptionHandler(exception = Exception401.class) // 어떤 예외인지 지정하기
-    public String ex(Exception401 e) {
+    public String ex401(Exception401 e) {
         String html = String.format("""
                 <script>
                     alert('%s');
@@ -36,7 +35,7 @@ public class GlobalExceptionHandler {
 
     // 403 - 권한 미달
     @ExceptionHandler(exception = Exception403.class) // 어떤 예외인지 지정하기
-    public String ex(Exception403 e) {
+    public String ex403(Exception403 e) {
         String html = String.format("""
                 <script>
                     alert('%s');
@@ -49,7 +48,7 @@ public class GlobalExceptionHandler {
 
     // 자원 찾기 실패
     @ExceptionHandler(exception = Exception404.class) // 어떤 예외인지 지정하기
-    public String ex(Exception404 e) {
+    public String ex404(Exception404 e) {
         String html = String.format("""
                 <script>
                     alert('%s');
@@ -62,7 +61,7 @@ public class GlobalExceptionHandler {
 
     // 서버 오류
     @ExceptionHandler(exception = Exception500.class) // 어떤 예외인지 지정하기
-    public String ex(Exception500 e) {
+    public String ex500(Exception500 e) {
         String html = String.format("""
                 <script>
                     alert('%s');
@@ -70,6 +69,21 @@ public class GlobalExceptionHandler {
                 </script>
                 """, "관리자에게 문의하십시오."); // 500 에러는 클라이언트에게 노출 금지
         // 로그 남기기
+        return html;
+    }
+
+    // 서버 오류
+    @ExceptionHandler(exception = RuntimeException.class) // 어떤 예외인지 지정하기
+    public String exUnknown(RuntimeException e) {
+        String html = String.format("""
+                <script>
+                    alert('%s');
+                    history.back();
+                </script>
+                """, "관리자에게 문의하십시오."); // 500 에러는 클라이언트에게 노출 금지
+        System.out.println("error : " + e.getMessage());
+        // 로그 남기기
+        // e.getMessage를 이용한 SNS알림
         return html;
     }
 }

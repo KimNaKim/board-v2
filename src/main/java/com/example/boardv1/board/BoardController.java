@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.boardv1._core.errors.ex.Exception401;
+import com.example.boardv1._core.errors.ex.Exception500;
 import com.example.boardv1.user.User;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -110,7 +111,11 @@ public class BoardController {
         if (sessionUser == null) {
             throw new Exception401("인증되지 않은 사용자입니다.");
         }
-        bService.delete(id, sessionUser.getId());
+        try {
+            bService.delete(id, sessionUser.getId());
+        } catch (Exception e) {
+            throw new Exception500("댓글이 있는 글은 삭제할 수 없습니다.");
+        }
         return "redirect:/";
     }
 
