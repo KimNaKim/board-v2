@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
                 </script>
                 """, e.getMessage());
         // 로그 남기기
+        System.out.println("400 error");
         return html;
     }
 
@@ -30,6 +31,7 @@ public class GlobalExceptionHandler {
                 </script>
                 """, e.getMessage());
         // 로그 남기기
+        System.out.println("401 error");
         return html;
     }
 
@@ -43,6 +45,7 @@ public class GlobalExceptionHandler {
                 </script>
                 """, e.getMessage());
         // 로그 남기기
+        System.out.println("403 error");
         return html;
     }
 
@@ -56,6 +59,7 @@ public class GlobalExceptionHandler {
                 </script>
                 """, e.getMessage());
         // 로그 남기기
+        System.out.println("404 error");
         return html;
     }
 
@@ -67,8 +71,9 @@ public class GlobalExceptionHandler {
                     alert('%s');
                     history.back();
                 </script>
-                """, "관리자에게 문의하십시오."); // 500 에러는 클라이언트에게 노출 금지
+                """, e.getMessage()); // 500 에러는 클라이언트에게 노출 금지
         // 로그 남기기
+        System.out.println("500 error");
         return html;
     }
 

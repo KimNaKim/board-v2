@@ -4,17 +4,20 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.boardv1._core.errors.ex.Exception400;
 import com.example.boardv1._core.errors.ex.Exception401;
 import com.example.boardv1._core.errors.ex.Exception500;
 import com.example.boardv1.user.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -46,7 +49,12 @@ public class BoardController {
 
     // 게시글 작성 버튼 누르면 실행됨
     @PostMapping("/boards/save")
-    public String save(BoardRequest.SaveOrUpdateDTO reqDTO) throws IOException {
+    public String save(@Valid BoardRequest.SaveOrUpdateDTO reqDTO, Errors errors) {
+        // 유효성 검사 실패 시
+        if (errors.hasErrors()) {
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
+
         // 인증o 권한x
         String title = reqDTO.getTitle();
         String content = reqDTO.getContent();
@@ -77,7 +85,11 @@ public class BoardController {
 
     // 게시글 수정 버튼 누르면 실행됨
     @PostMapping("/boards/{id}/update")
-    public String update(@PathVariable("id") int id, BoardRequest.SaveOrUpdateDTO reqDTO) {
+    public String update(@PathVariable("id") int id, @Valid BoardRequest.SaveOrUpdateDTO reqDTO, Errors errors) {
+        // 유효성 검사 실패 시
+        if (errors.hasErrors()) {
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
         // 인증o 권한o
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)

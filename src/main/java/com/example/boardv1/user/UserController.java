@@ -1,12 +1,16 @@
 package com.example.boardv1.user;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.boardv1._core.errors.ex.Exception400;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -24,9 +28,14 @@ public class UserController {
 
     // 로그인 버튼을 누를때 작동
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO reqDto, HttpServletResponse resp) {
+    public String login(@Valid UserRequest.LoginDTO reqDto, HttpServletResponse resp, Errors errors) {
         User sessionUser = uService.login(reqDto.getUsername(), reqDto.getPassword());
         session.setAttribute("sessionUser", sessionUser);
+
+        // 유효성 검사 실패 시
+        if (errors.hasErrors()) {
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
 
         // http Response header에 Set-Cookie : sessionKey 저장돼서 응답
         Cookie cookie = new Cookie("username", sessionUser.getUsername());
@@ -54,7 +63,12 @@ public class UserController {
 
     // 회원가입 버튼을 누를 때 작동
     @PostMapping("/join")
-    public String join(UserRequest.JoinDTO reqDto) {
+    public String join(@Valid UserRequest.JoinDTO reqDto, Errors errors) {
+        // 유효성 검사 실패 시
+        if (errors.hasErrors()) {
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
+
         uService.insert(reqDto.getUsername(), reqDto.getPassword(), reqDto.getEmail());
         // uService.findAll();
         return "redirect:/login-form";

@@ -1,5 +1,6 @@
 package com.example.boardv1.board;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 public class BoardRequest {
@@ -8,7 +9,9 @@ public class BoardRequest {
     @Data
     public static class SaveOrUpdateDTO {
         // insert&update시 사용할 DTO
+        @NotBlank(message = "제목을 입력해주세요.")
         private String title;
+        @NotBlank(message = "내용을 입력해주세요.")
         private String content;
     }
 }

@@ -3,11 +3,14 @@ package com.example.boardv1.reply;
 import java.io.IOException;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import com.example.boardv1._core.errors.ex.Exception400;
 import com.example.boardv1._core.errors.ex.Exception401;
 import com.example.boardv1.user.User;
 
@@ -19,7 +22,11 @@ public class ReplyController {
 
     // 댓글쓰기
     @PostMapping("/replies/save")
-    public String save(ReplyRequest.SaveOrUpdateDTO reqDTO) throws IOException {
+    public String save(@Valid ReplyRequest.SaveOrUpdateDTO reqDTO, Errors errors) {
+        // 유효성 검사 실패 시
+        if (errors.hasErrors()) {
+            throw new Exception400(errors.getAllErrors().get(0).getDefaultMessage());
+        }
         // 인증o 권한x
         User sessionUser = (User) session.getAttribute("sessionUser");
         // 인증 (로그인 유무 확인)
